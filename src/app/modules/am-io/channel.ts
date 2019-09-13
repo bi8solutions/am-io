@@ -5,6 +5,7 @@ import {filter, publish, takeUntil, takeWhile, tap} from "rxjs/operators";
 import {OperatorFunction} from "rxjs/interfaces";
 import {toSubscriber} from "rxjs/internal-compatibility";
 import {UUID} from "angular2-uuid";
+import {pipeFromArray} from 'rxjs/internal/util/pipe';
 
 //-----[ CHANNEL ]--------------------------------------------------------------------------------------------------------------------------
 
@@ -345,7 +346,7 @@ export class Channel<A = {}, T = {}, D = {}> extends BaseChannel<A, T, D> {
   }
 
   subscribe(observerOrNext?: any | ((value: T) => void), error?: (error: any) => void, complete?: () => void, ...ops: OperatorFunction<any, any>[]): Subscription {
-    return this.output$.pipe(...ops).subscribe(toSubscriber(observerOrNext, error, complete));
+    return this.output$.pipe(pipeFromArray([...ops])).subscribe(toSubscriber(observerOrNext, error, complete));
   }
 }
 
